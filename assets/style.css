@@ -40,6 +40,10 @@ body {
     padding: 1em;
     opacity: 1;
 }
+.carousel-item p {
+    text-align: center;
+}
+
 .carousel-item img {
     width: 120px;
     height: 150px;
@@ -63,7 +67,9 @@ body {
 nav {
     background: #222;
     padding: 1em;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 nav a {
     color: #fff;
@@ -72,6 +78,15 @@ nav a {
     font-weight: 500;
     transition: color 0.2s;
 }
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
 nav a:hover {
     color: #00bcd4;
 }

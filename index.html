@@ -8,11 +8,15 @@
 </head>
 <body>
     <nav>
-        <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
-        <a href="login.html">Login</a>
-        <a href="register.html">Register</a>
-        <a href="contact.html">Contact Us</a>
+        <div class="nav-left">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </div>
     </nav>
     <header>
         <h1>Welcome to SimpleWebShop</h1>
@@ -31,6 +35,30 @@
                 <button class="carousel-btn" id="nextBtn">&#10095;</button>
             </div>
             <script>
+                // Local product data array
+                const allPhones = [
+                  {"img": "https://i5.walmartimages.com/seo/Restored-Apple-iPhone-15-Pro-Max-512GB-Verizon-Blue-Titanium-MU6E3LL-A-Excellent-Condition_dd2d42c6-cc25-4bee-81ef-7847120498d5.663475b807d168a41e9082d258d9c7ce.jpeg", "name": "iPhone 15 Pro Max", "desc": "Apple's flagship with A17 Pro chip and titanium design.", "price": "RM 5,499"},
+                  {"img": "https://onyarbi.com/loyalty/wp-content/uploads/2024/03/samsung-min.png", "name": "Samsung Galaxy S24 Ultra", "desc": "Top-tier camera, S Pen, and Snapdragon 8 Gen 3.", "price": "RM 5,699"},
+                  {"img": "https://techbug-my.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/04233743/p8by.jpg", "name": "Google Pixel 8 Pro", "desc": "Tensor G3 chip, best-in-class AI camera.", "price": "RM 4,999"},
+                  {"img": "https://i5.walmartimages.com/seo/OnePlus-12-DUAL-SIM-1TB-ROM-16GB-RAM-GSM-CDMA-Factory-Unlocked-5G-Smartphone-Flowy-Emerald-International-Version_280ecc7f-f534-4235-a588-623e73a3661d.7aa725547b1b96766ecdbf74c4d02cf9.jpeg", "name": "OnePlus 12", "desc": "Snapdragon 8 Gen 3, fast charging, premium build.", "price": "RM 3,799"},
+                  {"img": "https://cdn.kalvo.com/uploads/img/gallery/56469-xiaomi-14-pro-3.jpg", "name": "Xiaomi 14 Pro", "desc": "Leica camera, Snapdragon 8 Gen 3, sleek design.", "price": "RM 4,299"},
+                  {"img": "https://m.media-amazon.com/images/I/710uklDlnjL._AC_SL1275_.jpg", "name": "Sony Xperia 1 V", "desc": "4K OLED display, pro-grade camera features.", "price": "RM 6,299"},
+                  {"img": "https://images-cdn.ubuy.co.in/660427015abad9367d2f2d8d-oppo-find-x7-ultra-5g-smartphone-china.jpg", "name": "Oppo Find X7", "desc": "Innovative design, great camera features.", "price": "RM 3,499"},
+                  {"img": "https://www.cect-shop.com/media/catalog/products/f/60023/5b20a62701/VIVO-NEX_8.JPG.jpg", "name": "Vivo Nex 6", "desc": "Pop-up camera, immersive display.", "price": "RM 2,999"},
+                  {"img": "https://cdn.kalvo.com/uploads/img/gallery/54815-realme-gt5-1.jpg", "name": "Realme GT 5", "desc": "Gaming performance, sleek design.", "price": "RM 2,499"},
+                  {"img": "https://cdn.store-assets.com/s/629537/i/67214782.png", "name": "Huawei P60 Pro", "desc": "Excellent camera, robust hardware.", "price": "RM 4,099"},
+                  {"img": "https://m.media-amazon.com/images/I/710uklDlnjL._AC_SL1275_.jpg", "name": "Sony Xperia 1V Non OLED", "desc": "4K display, professional camera features.", "price": "RM 4,599"},
+                  {"img": "https://shop.by/images/motorola_edge_50_pro_12gb_256gb_(chernyiy)_1.webp", "name": "Motorola Edge 50", "desc": "Edge display, solid battery life.", "price": "RM 2,799"},
+                  {"img": "https://dlcdnwebimgs.asus.com/gain/6CC77851-95F8-4910-808D-E0F94C840EB7", "name": "Asus Rog Phone 8", "desc": "Ultimate gaming phone, high refresh rate.", "price": "RM 4,999"},
+                  {"img": "https://images.ctfassets.net/wcfotm6rrl7u/1vuJoVeAkX7zR7onLCkT9g/75e749405f03f62a45a8e39bf9365dd3/nokia-X30_5G-cloudy_blue-front_back-int.png", "name": "Nokia XR 30", "desc": "Durable build, clean software.", "price": "RM 1,999"},
+                  {"img": "https://cdn.tgdd.vn/Products/Images/42/249428/lenovo-legion-3-pro-600x600.jpg", "name": "Lenovo Legion 3", "desc": "Gaming features, strong battery.", "price": "RM 3,299"},
+                  {"img": "https://deliblumoviles.com.pe/wp-content/uploads/2024/09/AXON50N111-810x810.jpg", "name": "ZTE Axon 50", "desc": "High-res camera, affordable price.", "price": "RM 2,199"},
+                  {"img": "https://cms.amanz.my/wp-content/uploads/2024/03/Meizu-21-Pro-B-950x1222.jpg", "name": "Meizu 21 Pro", "desc": "Elegant design, fast charging.", "price": "RM 2,499"},
+                  {"img": "https://cdn.kalvo.com/uploads/img/gallery/48243-tcl-40-x-3.jpg", "name": "TCL 40 X", "desc": "Large display, budget friendly.", "price": "RM 1,499"},
+                  {"img": "https://gagadget.com/media/uploads/2_EaZi6et.jpg", "name": "Sharp Aquos R8", "desc": "Crystal clear display, compact size.", "price": "RM 1,899"},
+                  {"img": "https://www.alcatelmobile.com/my/wp-content/uploads/2020/08/Alcatel-3x-2020-comp_01_513x599_1-1.png", "name": "Alcatel 5V", "desc": "Affordable, reliable performance.", "price": "RM 999"},
+                  {"img": "https://techbug-my.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/08/15180558/f869c59c-496a-4e4d-948a-a3d7ccb394d7-1.jpg", "name": "Google Fold", "desc": "Foldable display, multitasking features.", "price": "RM 6,999"}
+                ];
                 let featuredPhones = [];
                 let current = 0;
                 let interval = null;
@@ -65,24 +93,10 @@
                     }
                 }
 
-                function fetchFeaturedPhones() {
-                    fetch('products.json')
-                        .then(response => response.json())
-                        .then(products => {
-                            console.log('Products found:', products.length);
-                            if (!products || products.length === 0) {
-                                renderCarousel();
-                                return;
-                            }
-                            featuredPhones = shuffle(products).slice(0, 6);
-                            console.log('Featured phones:', featuredPhones);
-                            renderCarousel();
-                            startInterval();
-                        })
-                        .catch(err => {
-                            console.error('Fetch or parse error:', err);
-                            renderCarousel();
-                        });
+                function setupFeaturedPhones() {
+                    featuredPhones = shuffle(allPhones).slice(0, 6);
+                    renderCarousel();
+                    startInterval();
                 }
 
                 function animateSwipe(direction) {
@@ -123,45 +137,7 @@
                     startInterval();
                 }
 
-                document.addEventListener('DOMContentLoaded', fetchFeaturedPhones);
-
-                function animateSwipe(direction) {
-                    if (isAnimating) return;
-                    isAnimating = true;
-                    const track = document.getElementById('carouselTrack');
-                    track.style.transition = 'transform 0.5s';
-                    track.style.transform = direction === 'right' ? 'translateX(-320px)' : 'translateX(320px)';
-                    setTimeout(() => {
-                        track.style.transition = 'none';
-                        track.style.transform = 'translateX(0)';
-                        renderCarousel();
-                        isAnimating = false;
-                    }, 500);
-                }
-
-                function nextItem() {
-                    current = (current + 1) % featuredPhones.length;
-                    animateSwipe('right');
-                }
-                function prevItem() {
-                    current = (current - 1 + featuredPhones.length) % featuredPhones.length;
-                    animateSwipe('left');
-                }
-                document.getElementById('prevBtn').onclick = function() {
-                    prevItem();
-                    resetInterval();
-                };
-                document.getElementById('nextBtn').onclick = function() {
-                    nextItem();
-                    resetInterval();
-                };
-                function startInterval() {
-                    interval = setInterval(nextItem, 10000);
-                }
-                function resetInterval() {
-                    clearInterval(interval);
-                    startInterval();
-                }
+                document.addEventListener('DOMContentLoaded', setupFeaturedPhones);
             </script>
         </section>
     </main>
