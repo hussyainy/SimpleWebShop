@@ -27,6 +27,11 @@
                 <!-- Cart items will be rendered here -->
             </div>
         </section>
+        <section id="cartSummarySection" style="margin-top:2em;text-align:right;">
+            <div id="cartTotal" style="font-size:1.2em;font-weight:bold;margin-bottom:1em;color:#fff;background:#5a463c;padding:1em;border-radius:10px;display:inline-block;">Total: RM 0</div>
+            <br>
+            <button id="checkoutBtn" style="background:#ff5252;color:#fff;font-size:1.1em;padding:0.7em 2em;border:none;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.10);">Checkout</button>
+        </section>
     </main>
     <footer>
         <p>&copy; 2025 FonXpress. All rights reserved.</p>
@@ -63,8 +68,11 @@
     function renderCart() {
         const cartContainer = document.getElementById('cartContainer');
         let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        let total = 0;
         if (cart.length === 0) {
             cartContainer.innerHTML = '<div style="padding:2em;text-align:center;color:#888;font-size:1.2em;">Your cart is empty.</div>';
+            document.getElementById('cartTotal').textContent = 'Total: RM 0';
+            document.getElementById('checkoutBtn').disabled = true;
             return;
         }
         cartContainer.innerHTML = '';
@@ -72,12 +80,15 @@
             let orig = parseFloat(item.price.replace(/RM\s*/, '').replace(/,/g, ''));
             let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             let priceHtml = '';
+            let finalPrice = orig;
             if (isLoggedIn) {
                 let disc = Math.round(orig * 0.5);
                 priceHtml = `<span style='text-decoration:line-through;color:#888;'>RM ${orig.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
+                finalPrice = disc;
             } else {
                 priceHtml = 'RM ' + orig.toLocaleString();
             }
+            total += finalPrice;
             cartContainer.innerHTML += `
                 <div class="cart-item" style="display:flex;align-items:center;gap:1em;margin-bottom:1.5em;background:#f9f9f9;padding:1em;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
                     <img src="${item.img}" alt="${item.name}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
@@ -90,6 +101,8 @@
                 </div>
             `;
         });
+        document.getElementById('cartTotal').textContent = 'Total: RM ' + total.toLocaleString();
+        document.getElementById('checkoutBtn').disabled = false;
     }
     document.addEventListener('DOMContentLoaded', renderCart);
     // Remove item from cart

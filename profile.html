@@ -100,14 +100,18 @@
     // Example: Prefill username
     document.addEventListener('DOMContentLoaded', function() {
         var username = localStorage.getItem('username');
-        var email = localStorage.getItem('email');
         if (username) {
-            document.getElementById('username').value = username;
+            fetch('get_profile.php?username=' + encodeURIComponent(username))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.email) document.getElementById('email').value = data.email;
+                    if (data.fullname) document.getElementById('fullname').value = data.fullname;
+                    if (data.phone) document.getElementById('phone').value = data.phone;
+                    if (data.address) document.getElementById('address').value = data.address;
+                    if (data.gender) document.getElementById(data.gender).checked = true;
+                    document.getElementById('username').value = username;
+                });
         }
-        if (email) {
-            document.getElementById('email').value = email;
-        }
-        // You can prefill other fields here if you store them in localStorage or fetch from backend
     });
     </script>
 </body>
