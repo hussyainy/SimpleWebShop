@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimpleWebShop - Home</title>
+    <title>FonXpress - Home</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <nav>
@@ -13,14 +14,12 @@
             <a href="products.html">Products</a>
             <a href="contact.html">Contact Us</a>
         </div>
-        <div class="nav-right">
-            <a href="login.html">Login</a>
-            <a href="register.html">Register</a>
+        <div class="nav-right" id="navRight">
+            <!-- Cart icon and count will be injected by JS -->
         </div>
     </nav>
     <header>
-        <h1>Welcome to SimpleWebShop</h1>
-        <p>Your destination for the latest smartphones!</p>
+    <h1>Welcome to FonXpress</h1>
     </header>
     <main>
         <section>
@@ -35,6 +34,34 @@
                 <button class="carousel-btn" id="nextBtn">&#10095;</button>
             </div>
             <script>
+                // Update nav bar and welcome message on login
+                function updateNavBar() {
+                    const navRight = document.getElementById('navRight');
+                    const username = localStorage.getItem('username');
+                    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    let cartCount = cart.length;
+                    let cartHtml = `<a href="cart.html" id="cartBtn" style="position:relative;margin-right:1em;">
+                        <i class="fa fa-shopping-cart" style="font-size:1.3em;color:#FFF;"></i>
+                        <span id="cartCount" style="position:absolute;top:-8px;right:-10px;background:#ff5252;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.9em;font-weight:bold;">${cartCount}</span>
+                    </a>`;
+                    if (localStorage.getItem('isLoggedIn') === 'true' && username) {
+                        navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome member ' + username + '!</span>' +
+                            cartHtml + '<a href="#" id="logoutBtn">Logout</a> <a href="profile.html" id="profileBtn">Profile</a>';
+                    } else {
+                        navRight.innerHTML = cartHtml + '<a href="login.html" id="loginBtn">Login</a> <a href="register.html" id="registerBtn">Register</a>';
+                    }
+                }
+                document.addEventListener('DOMContentLoaded', updateNavBar);
+                // Logout handler
+                document.addEventListener('click', function(e) {
+                    if (e.target && e.target.id === 'logoutBtn') {
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('username');
+                        updateNavBar();
+                        alert('You have logged out. All discounts have reverted to original price.');
+                        window.location.reload();
+                    }
+                });
                 // Local product data array
                 const allPhones = [
                   {"img": "https://i5.walmartimages.com/seo/Restored-Apple-iPhone-15-Pro-Max-512GB-Verizon-Blue-Titanium-MU6E3LL-A-Excellent-Condition_dd2d42c6-cc25-4bee-81ef-7847120498d5.663475b807d168a41e9082d258d9c7ce.jpeg", "name": "iPhone 15 Pro Max", "desc": "Apple's flagship with A17 Pro chip and titanium design.", "price": "RM 5,499"},
@@ -84,12 +111,84 @@
                         const phone = featuredPhones[idx];
                         const item = document.createElement('div');
                         item.className = 'carousel-item active';
+                        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                        let priceHtml = '';
+                        if (isLoggedIn) {
+                            let orig = parseFloat(phone.price.replace(/RM\s*/,'').replace(/,/g,''));
+                            let disc = Math.round(orig * 0.5);
+                            priceHtml = `<span style='text-decoration:line-through;color:#888;'>RM ${orig.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
+                        } else {
+                            priceHtml = phone.price;
+                        }
                         item.innerHTML =
                             '<img src="' + phone.img + '" alt="' + phone.name + '">' +
                             '<h3>' + phone.name + '</h3>' +
                             '<p>' + phone.desc + '</p>' +
-                            '<p>' + phone.price + '</p>';
+                            '<p>' + priceHtml + '</p>' +
+                            '<button class="add-cart-btn" data-index="' + idx + '">Add to Cart</button>';
+                        if (isLoggedIn) {
+                            let badge = document.createElement('div');
+                            badge.className = 'discount-badge';
+                            badge.textContent = '50% OFF';
+                            badge.style.position = 'absolute';
+                            badge.style.top = '10px';
+                            badge.style.right = '10px';
+                            badge.style.background = '#ff5252';
+                            badge.style.color = '#fff';
+                            badge.style.padding = '0.4em 1em';
+                            badge.style.borderRadius = '20px';
+                            badge.style.fontWeight = 'bold';
+                            badge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+                            badge.style.zIndex = '2';
+                            item.style.position = 'relative';
+                            item.appendChild(badge);
+                        }
                         track.appendChild(item);
+                // Simple cart array
+                let cart = [];
+
+                // Add to cart handler
+                // attach ONCE
+                if (!window._cartHandlerBound) {
+                document.addEventListener('click', handleAddToCart, { passive: false });
+                window._cartHandlerBound = true;
+                }
+
+                let loginPromptShown = false;
+
+                function handleAddToCart(e) {
+                // catch clicks on children inside the button too
+                const btn = e.target.closest('.add-cart-btn');
+                if (!btn) return;
+
+                e.preventDefault();
+                e.stopPropagation(); // don't let parent handlers also run
+
+                // throttle rapid double-clicks
+                if (btn.disabled) return;
+                btn.disabled = true;
+                setTimeout(() => (btn.disabled = false), 500);
+
+                // require login (show prompt only once per page)
+                if (localStorage.getItem('isLoggedIn') !== 'true') {
+                    if (!loginPromptShown) {
+                    loginPromptShown = true;
+                    alert('You need to login if you want to add product to cart!');
+                    }
+                    return;
+                }
+
+                const phoneIdx = Number(btn.dataset.index);
+                const phone = featuredPhones[phoneIdx];
+                cart.push(phone);
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // consider a toast/snackbar instead of alert
+                alert(phone.name + ' added to cart!');
+                updateNavBar();
+                }
+
+                document.getElementById('carouselTrack').addEventListener('click', handleAddToCart);
                     }
                 }
 
@@ -141,5 +240,8 @@
             </script>
         </section>
     </main>
+    <footer>
+        <p>&copy; 2025 FonXpress. All rights reserved.</p>
+    </footer>
 </body>
 </html>

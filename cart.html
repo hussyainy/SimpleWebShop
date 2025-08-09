@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - FonXpress</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <div class="nav-right" id="navRight">
+            <!-- Cart icon and count will be injected by JS -->
+        </div>
+    </nav>
+    <header>
+        <h1>My Cart</h1>
+    </header>
+    <main>
+        <section>
+            <div id="cartContainer" class="cart-list">
+                <!-- Cart items will be rendered here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 FonXpress. All rights reserved.</p>
+    </footer>
+    <script>
+    // Sync nav bar style and cart count
+    function updateNavBar() {
+        const navRight = document.getElementById('navRight');
+        const username = localStorage.getItem('username');
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        let cartCount = cart.length;
+        let cartHtml = `<a href="cart.html" id="cartBtn" style="position:relative;margin-right:1em;">
+            <i class="fa fa-shopping-cart" style="font-size:1.3em;color:#FFF;"></i>
+            <span id="cartCount" style="position:absolute;top:-8px;right:-10px;background:#ff5252;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.9em;font-weight:bold;">${cartCount}</span>
+        </a>`;
+        if (localStorage.getItem('isLoggedIn') === 'true' && username) {
+            navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome member ' + username + '!</span>' +
+                cartHtml + '<a href="#" id="logoutBtn">Logout</a> <a href="profile.html">Profile</a>';
+        } else {
+            navRight.innerHTML = cartHtml + '<a href="login.html" id="loginBtn">Login</a> <a href="register.html" id="registerBtn">Register</a>';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', updateNavBar);
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'logoutBtn') {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            updateNavBar();
+            alert('You have logged out. All discounts have reverted to original price.');
+            window.location.reload();
+        }
+    });
+    // Render cart items
+    function renderCart() {
+        const cartContainer = document.getElementById('cartContainer');
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        if (cart.length === 0) {
+            cartContainer.innerHTML = '<div style="padding:2em;text-align:center;color:#888;font-size:1.2em;">Your cart is empty.</div>';
+            return;
+        }
+        cartContainer.innerHTML = '';
+        cart.forEach(function(item, idx) {
+            let orig = parseFloat(item.price.replace(/RM\s*/, '').replace(/,/g, ''));
+            let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            let priceHtml = '';
+            if (isLoggedIn) {
+                let disc = Math.round(orig * 0.5);
+                priceHtml = `<span style='text-decoration:line-through;color:#888;'>RM ${orig.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
+            } else {
+                priceHtml = 'RM ' + orig.toLocaleString();
+            }
+            cartContainer.innerHTML += `
+                <div class="cart-item" style="display:flex;align-items:center;gap:1em;margin-bottom:1.5em;background:#f9f9f9;padding:1em;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                    <img src="${item.img}" alt="${item.name}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
+                    <div style="flex:1;">
+                        <h3 style="margin:0 0 0.3em 0;">${item.name}</h3>
+                        <p style="margin:0 0 0.3em 0;">${item.desc}</p>
+                        <p style="margin:0;">${priceHtml}</p>
+                    </div>
+                    <button class="remove-cart-btn" data-index="${idx}" style="background:#ff5252;color:#fff;border:none;padding:0.5em 1em;border-radius:5px;cursor:pointer;">Remove</button>
+                </div>
+            `;
+        });
+    }
+    document.addEventListener('DOMContentLoaded', renderCart);
+    // Remove item from cart
+    document.getElementById('cartContainer').addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-cart-btn')) {
+            let idx = parseInt(e.target.getAttribute('data-index'));
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.splice(idx, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateNavBar();
+            renderCart();
+        }
+    });
+    </script>
+</body>
+</html>
