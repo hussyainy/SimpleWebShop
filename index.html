@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body style="background: #2d2320; background: linear-gradient(135deg, #3a2c28 0%, #5a463c 100%);">
+<body>
     <nav>
         <div class="nav-left">
             <a href="index.html">Home</a>
@@ -25,15 +25,36 @@
         <section>
             <h2>Featured Phones</h2>
             <div class="carousel-container">
-                <button class="carousel-btn" id="prevBtn">&#10094;</button>
-                <div class="carousel" id="carousel">
+                <div class="carousel" id="carousel" style="width:calc(100% + 20px);margin-left:-10px;">
                     <div class="carousel-track" id="carouselTrack">
                         <!-- Carousel items will be injected by JS -->
                     </div>
                 </div>
-                <button class="carousel-btn" id="nextBtn">&#10095;</button>
+                <div class="carousel-radio-group" id="carouselRadioGroup" style="display:flex;justify-content:center;align-items:center;margin-top:1em;gap:1em;"></div>
             </div>
             <script>
+                // Render radio buttons for carousel navigation
+                function renderCarouselRadios() {
+                    const radioGroup = document.getElementById('carouselRadioGroup');
+                    radioGroup.innerHTML = '';
+                    for (let i = 0; i < featuredPhones.length; i++) {
+                        let radio = document.createElement('input');
+                        radio.type = 'radio';
+                        radio.name = 'carouselRadio';
+                        radio.value = i;
+                        radio.style.width = '18px';
+                        radio.style.height = '18px';
+                        radio.style.accentColor = '#ff5252';
+                        radio.checked = (i === current);
+                        radio.onclick = function() {
+                            current = i;
+                            renderCarousel();
+                            renderCarouselRadios();
+                            resetInterval();
+                        };
+                        radioGroup.appendChild(radio);
+                    }
+                }
                 // Update nav bar and welcome message on login
                 function updateNavBar() {
                     const navRight = document.getElementById('navRight');
@@ -45,7 +66,7 @@
                         <span id="cartCount" style="position:absolute;top:-8px;right:-10px;background:#ff5252;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.9em;font-weight:bold;">${cartCount}</span>
                     </a>`;
                     if (localStorage.getItem('isLoggedIn') === 'true' && username) {
-                        navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome member ' + username + '!</span>' +
+                        navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome ' + username + '!</span>' +
                             cartHtml + '<a href="#" id="logoutBtn">Logout</a> <a href="profile.html" id="profileBtn">Profile</a>';
                     } else {
                         navRight.innerHTML = cartHtml + '<a href="login.html" id="loginBtn">Login</a> <a href="register.html" id="registerBtn">Register</a>';
@@ -144,17 +165,20 @@
                             item.appendChild(badge);
                         }
                         track.appendChild(item);
-                // Simple cart array
-                let cart = [];
-
-                // Add to cart handler
-                // attach ONCE
-                if (!window._cartHandlerBound) {
-                document.addEventListener('click', handleAddToCart, { passive: false });
-                window._cartHandlerBound = true;
+                    }
+                    renderCarouselRadios();
                 }
+// Simple cart array
+let cart = [];
 
-                let loginPromptShown = false;
+// Add to cart handler
+// attach ONCE
+if (!window._cartHandlerBound) {
+    document.addEventListener('click', handleAddToCart, { passive: false });
+    window._cartHandlerBound = true;
+}
+
+let loginPromptShown = false;
 
                 function handleAddToCart(e) {
                 // catch clicks on children inside the button too
@@ -189,8 +213,8 @@
                 }
 
                 document.getElementById('carouselTrack').addEventListener('click', handleAddToCart);
-                    }
-                }
+                    
+                
 
                 function setupFeaturedPhones() {
                     featuredPhones = shuffle(allPhones).slice(0, 6);
@@ -220,14 +244,6 @@
                     current = (current - 1 + featuredPhones.length) % featuredPhones.length;
                     animateSwipe('left');
                 }
-                document.getElementById('prevBtn').onclick = function() {
-                    prevItem();
-                    resetInterval();
-                };
-                document.getElementById('nextBtn').onclick = function() {
-                    nextItem();
-                    resetInterval();
-                };
                 function startInterval() {
                     interval = setInterval(nextItem, 3000);
                 }
@@ -283,7 +299,7 @@
                 <p><strong>August 2025:</strong> FonXpress launches new trade-in program for old devices.</p>
             </div>
             <div class="news-container" style="background:#fffbe6;padding:1em;border-radius:10px;margin-bottom:1em;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:2px solid #bca18c;">
-                <p><strong>July 2025:</strong> Samsung Galaxy S24 Ultra now available in Malaysia!</p>
+                <p><strong>July 2025:</strong> Samsung Galaxy S25 Ultra now available in Malaysia!</p>
             </div>
         </section>
         <br><br><br>

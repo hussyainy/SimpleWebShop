@@ -94,7 +94,7 @@
             <span id="cartCount" style="position:absolute;top:-8px;right:-10px;background:#ff5252;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.9em;font-weight:bold;">${cartCount}</span>
         </a>`;
         if (localStorage.getItem('isLoggedIn') === 'true' && username) {
-            navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome member ' + username + '!</span>' +
+            navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome ' + username + '!</span>' +
                 cartHtml + '<a href="#" id="logoutBtn">Logout</a> <a href="profile.html">Profile</a>';
         } else {
             navRight.innerHTML = cartHtml + '<a href="login.html" id="loginBtn">Login</a> <a href="register.html" id="registerBtn">Register</a>';
