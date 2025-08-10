@@ -24,7 +24,6 @@
         <script>
         function updateNavBar() {
             var navRight = document.getElementById('navRight');
-            const navRight = document.getElementById('navRight');
             const username = localStorage.getItem('username');
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             let cartCount = cart.length;

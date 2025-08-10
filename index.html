@@ -30,7 +30,9 @@
                         <!-- Carousel items will be injected by JS -->
                     </div>
                 </div>
-                <div class="carousel-radio-group" id="carouselRadioGroup" style="display:flex;justify-content:center;align-items:center;margin-top:1em;gap:1em;"></div>
+                <div class="carousel-radio-center">
+                  <div class="carousel-radio-group" id="carouselRadioGroup"></div>
+                </div>
             </div>
             <script>
                 // Render radio buttons for carousel navigation
@@ -126,7 +128,8 @@
                         track.innerHTML = '<div style="width:100%;text-align:center;padding:2em;font-size:1.2em;color:#888;">No featured phones available.</div>';
                         return;
                     }
-                    for (let i = 0; i < 3; i++) {
+                    let itemsToShow = window.innerWidth <= 900 ? 1 : 3;
+                    for (let i = 0; i < itemsToShow; i++) {
                         const idx = (current + i) % featuredPhones.length;
                         const phone = featuredPhones[idx];
                         const item = document.createElement('div');
@@ -165,6 +168,9 @@
                         }
                         track.appendChild(item);
                     }
+                    window.addEventListener('resize', function() {
+                        renderCarousel();
+                    });
                     renderCarouselRadios();
                 }
 // Simple cart array
