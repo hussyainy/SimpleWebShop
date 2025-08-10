@@ -9,7 +9,7 @@
 </head>
 <body>
     <script>
-    // Add to cart handler with login check
+    // Add to cart handler with login check using localStorage
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.product-list').addEventListener('click', function(e) {
             if (e.target.tagName === 'BUTTON' && e.target.textContent === 'Add to Cart') {
@@ -26,49 +26,50 @@
                 cart.push({ name, desc, img, price });
                 localStorage.setItem('cart', JSON.stringify(cart));
                 alert(name + ' added to cart!');
-                const navRight = document.getElementById('navRight');
-                let cartCount = cart.length;
-                let cartCountSpan = navRight.querySelector('#cartCount');
-                if (cartCountSpan) cartCountSpan.textContent = cartCount;
+                updateNavBar();
             }
         });
     });
-    // Check login status using localStorage
-    function isLoggedIn() {
-        return localStorage.getItem('isLoggedIn') === 'true';
+    // Check login status using session
+    function isLoggedIn(callback) {
+        fetch('get_profile.php')
+            .then(response => response.json())
+            .then(data => callback(!!data.username));
     }
     document.addEventListener('DOMContentLoaded', function() {
-        if (isLoggedIn()) {
-            document.querySelectorAll('.product').forEach(function(prod) {
-                let priceEl = prod.querySelector('p:nth-of-type(2)');
-                if (priceEl && priceEl.textContent.includes('RM')) {
-                    let price = priceEl.textContent.match(/RM\s*([\d,]+)/);
-                    if (price) {
-                        let orig = parseFloat(price[1].replace(/,/g, ''));
-                        let disc = Math.round(orig * 0.5);
-                        priceEl.innerHTML = `<span style='text-decoration:line-through;color:#888;'>RM ${orig.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
+        isLoggedIn(function(loggedIn) {
+            if (loggedIn) {
+                document.querySelectorAll('.product').forEach(function(prod) {
+                    let priceEl = prod.querySelector('p:nth-of-type(2)');
+                    if (priceEl && priceEl.textContent.includes('RM')) {
+                        let price = priceEl.textContent.match(/RM\s*([\d,]+)/);
+                        if (price) {
+                            let orig = parseFloat(price[1].replace(/,/g, ''));
+                            let disc = Math.round(orig * 0.5);
+                            priceEl.innerHTML = `<span style='text-decoration:line-through;color:#888;'>RM ${orig.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
+                        }
                     }
-                }
-                // Add discount badge
-                if (!prod.querySelector('.discount-badge')) {
-                    let badge = document.createElement('div');
-                    badge.className = 'discount-badge';
-                    badge.textContent = '50% OFF';
-                    badge.style.position = 'absolute';
-                    badge.style.top = '10px';
-                    badge.style.right = '10px';
-                    badge.style.background = '#ff5252';
-                    badge.style.color = '#fff';
-                    badge.style.padding = '0.4em 1em';
-                    badge.style.borderRadius = '20px';
-                    badge.style.fontWeight = 'bold';
-                    badge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
-                    badge.style.zIndex = '2';
-                    prod.style.position = 'relative';
-                    prod.appendChild(badge);
-                }
-            });
-        }
+                    // Add discount badge
+                    if (!prod.querySelector('.discount-badge')) {
+                        let badge = document.createElement('div');
+                        badge.className = 'discount-badge';
+                        badge.textContent = '50% OFF';
+                        badge.style.position = 'absolute';
+                        badge.style.top = '10px';
+                        badge.style.right = '10px';
+                        badge.style.background = '#ff5252';
+                        badge.style.color = '#fff';
+                        badge.style.padding = '0.4em 1em';
+                        badge.style.borderRadius = '20px';
+                        badge.style.fontWeight = 'bold';
+                        badge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+                        badge.style.zIndex = '2';
+                        prod.style.position = 'relative';
+                        prod.appendChild(badge);
+                    }
+                });
+            }
+        });
     });
     </script>
     <nav>
@@ -103,11 +104,10 @@
     document.addEventListener('DOMContentLoaded', updateNavBar);
     document.addEventListener('click', function(e) {
         if (e.target && e.target.id === 'logoutBtn') {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+            localStorage.clear();
             updateNavBar();
             alert('You have logged out. All discounts have reverted to original price.');
-            window.location.reload();
+            window.location.href = 'index.html';
         }
     });
     </script>

@@ -1,6 +1,6 @@
 
 <?php
-require_once 'dbConnect.php';
+require_once __DIR__ . '/config/dbConnect.php';
 
 // Login logic
 $errorMsg = '';
@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->fetch();
         if (password_verify($password, $hash)) {
             // Login successful! Update last_login
+            session_start();
+            $_SESSION['username'] = $username;
             $update = $conn->prepare('UPDATE users SET last_login=NOW() WHERE username=?');
             $update->bind_param('s', $username);
             $update->execute();

@@ -19,7 +19,7 @@
         </div>
     </nav>
     <header>
-        <h1>My Profile</h1>
+    <h1 id="profileTitle">My Profile</h1>
     </header>
     <main>
         <div id="popupModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
@@ -49,8 +49,8 @@
                 <label for="female">Female</label>
             </div>
 
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required readonly style="background:#eee;" tabindex="-1" onfocus="this.blur();" onkeydown="return false;" autocomplete="off">
+            <!-- Username field hidden from user -->
+            <input type="hidden" id="username" name="username">
 
             <!-- Simple captcha -->
             <label for="captcha">Captcha: What is <span id="captchaNum1"></span> + <span id="captchaNum2"></span>?</label>
@@ -86,7 +86,8 @@
         document.getElementById('popupModal').style.display = 'none';
         if (window._popupCallback) window._popupCallback();
     }
-    // Sync nav bar style and cart count
+
+    // Sync nav bar style and cart count using session state only
     function updateNavBar() {
         const navRight = document.getElementById('navRight');
         const username = localStorage.getItem('username');
@@ -106,13 +107,13 @@
     document.addEventListener('DOMContentLoaded', updateNavBar);
     document.addEventListener('click', function(e) {
         if (e.target && e.target.id === 'logoutBtn') {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+            localStorage.clear();
             updateNavBar();
             alert('You have logged out. All discounts have reverted to original price.');
-            window.location.reload();
+            window.location.href = 'index.html';
         }
     });
+
     // Captcha setup
     var num1 = Math.floor(Math.random() * 10) + 1;
     var num2 = Math.floor(Math.random() * 10) + 1;
@@ -139,9 +140,10 @@
             if (data.success) {
                 showPopup(data.message, function() {
                     // Auto logout and redirect to login
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('username');
-                    window.location.href = 'login.html';
+                    fetch('logout.php', { method: 'POST' })
+                        .then(() => {
+                            window.location.href = 'login.html';
+                        });
                 });
             } else {
                 showPopup(data.message);
@@ -151,22 +153,22 @@
             showPopup('Failed to update profile. Please try again.');
         });
     });
-    // Optionally, prefill form fields from localStorage or via AJAX
-    // Example: Prefill username
+
+    // Prefill profile fields for logged-in user only using session
     document.addEventListener('DOMContentLoaded', function() {
-        var username = localStorage.getItem('username');
-        if (username) {
-            fetch('get_profile.php?username=' + encodeURIComponent(username))
-                .then(response => response.json())
-                .then(data => {
-                    if (data.email) document.getElementById('email').value = data.email;
-                    if (data.fullname) document.getElementById('fullname').value = data.fullname;
-                    if (data.phone) document.getElementById('phone').value = data.phone;
-                    if (data.address) document.getElementById('address').value = data.address;
-                    if (data.gender) document.getElementById(data.gender).checked = true;
-                    document.getElementById('username').value = username;
-                });
-        }
+        fetch('get_profile.php?cb=' + Date.now())
+            .then(response => response.json())
+            .then(data => {
+                if (data.email) document.getElementById('email').value = data.email;
+                if (data.fullname) document.getElementById('fullname').value = data.fullname;
+                if (data.phone) document.getElementById('phone').value = data.phone;
+                if (data.address) document.getElementById('address').value = data.address;
+                if (data.gender) document.getElementById(data.gender).checked = true;
+                if (data.username) {
+                    document.getElementById('username').value = data.username;
+                    document.getElementById('profileTitle').textContent = data.username + ' Profile';
+                }
+            });
     });
     </script>
 </body>

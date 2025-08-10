@@ -6,8 +6,9 @@ if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
 }
 
 // Load .env variables
-if (file_exists(__DIR__ . '/.env')) {
-    $lines = file(__DIR__ . '/.env');
+$envPath = __DIR__ . '/.env';
+if (file_exists($envPath)) {
+    $lines = file($envPath);
     foreach ($lines as $line) {
         if (trim($line) && strpos($line, '=') !== false) {
             list($name, $value) = explode('=', trim($line), 2);

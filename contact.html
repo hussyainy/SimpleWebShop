@@ -18,87 +18,122 @@
             <!-- Cart icon and count will be injected by JS -->
         </div>
     </nav>
+
     <header>
-    <h1>Contact Us</h1>
-    <script>
-    function updateNavBar() {
-        const navRight = document.getElementById('navRight');
-        const username = localStorage.getItem('username');
-        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        let cartCount = cart.length;
-        let cartHtml = `<a href="cart.html" id="cartBtn" style="position:relative;margin-right:1em;">
-            <i class="fa fa-shopping-cart" style="font-size:1.3em;color:#FFF;"></i>
-            <span id="cartCount" style="position:absolute;top:-8px;right:-10px;background:#ff5252;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.9em;font-weight:bold;">${cartCount}</span>
-        </a>`;
-        if (localStorage.getItem('isLoggedIn') === 'true' && username) {
-            navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome ' + username + '!</span>' +
-                cartHtml + '<a href="#" id="logoutBtn">Logout</a> <a href="profile.html">Profile</a>';
-        } else {
-            navRight.innerHTML = cartHtml + '<a href="login.html" id="loginBtn">Login</a> <a href="register.html" id="registerBtn">Register</a>';
+        <h1>Contact Us</h1>
+        <script>
+        function updateNavBar() {
+            var navRight = document.getElementById('navRight');
+            const navRight = document.getElementById('navRight');
+            const username = localStorage.getItem('username');
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            let cartCount = cart.length;
+            let cartHtml = `<a href="cart.html" id="cartBtn" style="position:relative;margin-right:1em;">
+                <i class="fa fa-shopping-cart" style="font-size:1.3em;color:#FFF;"></i>
+                <span id="cartCount" style="position:absolute;top:-8px;right:-10px;background:#ff5252;color:#fff;border-radius:50%;padding:2px 7px;font-size:0.9em;font-weight:bold;">${cartCount}</span>
+            </a>`;
+            if (localStorage.getItem('isLoggedIn') === 'true' && username) {
+                navRight.innerHTML = '<span class="welcome-nav" style="margin-right:1em;color:#FFF;font-weight:bold;">Welcome ' + username + '!</span>' +
+                    cartHtml + '<a href="#" id="logoutBtn">Logout</a> <a href="profile.html">Profile</a>';
+            } else {
+                navRight.innerHTML = cartHtml + '<a href="login.html" id="loginBtn">Login</a> <a href="register.html" id="registerBtn">Register</a>';
+            }
         }
-    }
-    document.addEventListener('DOMContentLoaded', updateNavBar);
-    document.addEventListener('click', function(e) {
-        if (e.target && e.target.id === 'logoutBtn') {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
-            updateNavBar();
-            alert('You have logged out. All discounts have reverted to original price.');
-            window.location.reload();
-        }
-    });
-    </script>
+
+        document.addEventListener('DOMContentLoaded', updateNavBar);
+
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.id === 'logoutBtn') {
+                localStorage.clear();
+                updateNavBar();
+                alert('You have logged out. All discounts have reverted to original price.');
+                window.location.href = 'index.html';
+            }
+        });
+        </script>
     </header>
+
     <main>
-        <div id="popupModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <!-- Popup modal (fixed: only display:none here) -->
+        <div id="popupModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
             <div style="background:#fff;padding:2em 2.5em;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,0.18);max-width:90vw;text-align:center;">
                 <span id="popupMsg" style="font-size:1.2em;color:#333;"></span><br><br>
                 <button onclick="closePopup()" style="background:#ff5252;color:#fff;padding:0.7em 2em;border:none;border-radius:8px;cursor:pointer;font-size:1em;">OK</button>
             </div>
         </div>
+
+        <!-- Contact form -->
         <form class="form-box" id="contactForm" action="#" method="post">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
+
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
+
             <label for="message">Message:</label>
             <textarea id="message" name="message" rows="5" required></textarea>
+
             <button type="submit">Send Message</button>
         </form>
 
-        <div style="margin-top:2.5em;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
-            <div style="font-size:1.15em;font-weight:500;color:#4a3c2a;margin-bottom:0.7em;">
-                <i class="fa fa-map-marker-alt" style="color:#ff5252;margin-right:0.5em;"></i>
-                FonXpress HQ<br>
-                Level 18, Menara Maxis,<br>
-                Kuala Lumpur City Centre,<br>
-                50088 Kuala Lumpur, Malaysia
+        <!-- Two-column section: Map (left) + Info (right) -->
+        <div style="margin-top:2.5em;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:2em;">
+            <!-- Map -->
+            <div style="flex:1;min-width:300px;max-width:500px;">
+                <iframe
+                    src="https://www.google.com/maps?q=Menara+Maxis,+Kuala+Lumpur+City+Centre,+50088+Kuala+Lumpur,+Malaysia&output=embed"
+                    width="100%" height="280"
+                    style="border:0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.10);"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
-            <div style="font-size:1.15em;font-weight:500;color:#4a3c2a;">
-                <i class="fa fa-phone" style="color:#ff5252;margin-right:0.5em;"></i>
-                Hotline: +60 3-2380 8888
+
+            <!-- Contact info -->
+            <div style="flex:1;min-width:260px;text-align:left;">
+                <div style="font-size:1.15em;font-weight:500;color:#4a3c2a;margin-bottom:0.7em;">
+                    <i class="fa fa-map-marker-alt" style="color:#ff5252;margin-right:0.5em;"></i>
+                    <strong>FonXpress HQ</strong><br>
+                    Level 18, Menara Maxis,<br>
+                    Kuala Lumpur City Centre,<br>
+                    50088 Kuala Lumpur, Malaysia
+                </div>
+                <div style="font-size:1.15em;font-weight:500;color:#4a3c2a;margin-bottom:0.7em;">
+                    <i class="fa fa-phone" style="color:#ff5252;margin-right:0.5em;"></i>
+                    Hotline: +60 3-2380 8888
+                </div>
+                <div style="font-size:1.1em;color:#4a3c2a;">
+                    <i class="fa fa-clock" style="color:#ff5252;margin-right:0.5em;"></i>
+                    Working Hours: <br>Mon–Fri : 9:00am–6:00pm<br>
+                    Sat : 10:00am–2:00pm<br>
+                    Closed on Sundays & Public Holidays
+                </div>
             </div>
         </div>
+
+        <br><br><br>
     </main>
+
     <footer>
-    <p>&copy; 2025 FonXpress. All rights reserved.</p>
+        <p>&copy; 2025 FonXpress. All rights reserved.</p>
     </footer>
-<script>
+
+    <script>
     // Popup modal logic
     function showPopup(msg) {
         var modal = document.getElementById('popupModal');
         var msgSpan = document.getElementById('popupMsg');
         msgSpan.textContent = msg;
-        modal.style.display = 'flex';
+        modal.style.display = 'flex'; // show only when called
     }
     function closePopup() {
         document.getElementById('popupModal').style.display = 'none';
     }
+
     document.getElementById('contactForm').addEventListener('submit', function(e) {
         e.preventDefault();
         showPopup('Message has been sent and our staff will contact you in 3 working days');
         document.getElementById('contactForm').reset();
     });
-</script>
+    </script>
 </body>
 </html>

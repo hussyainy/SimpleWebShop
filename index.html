@@ -76,8 +76,7 @@
                 // Logout handler
                 document.addEventListener('click', function(e) {
                     if (e.target && e.target.id === 'logoutBtn') {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('username');
+                        localStorage.clear();
                         updateNavBar();
                         alert('You have logged out. All discounts have reverted to original price.');
                         window.location.reload();
@@ -196,18 +195,16 @@ let loginPromptShown = false;
                 // require login (show prompt only once per page)
                 if (localStorage.getItem('isLoggedIn') !== 'true') {
                     if (!loginPromptShown) {
-                    loginPromptShown = true;
-                    alert('You need to login if you want to add product to cart!');
+                        loginPromptShown = true;
+                        alert('You need to login if you want to add product to cart!');
                     }
                     return;
                 }
-
                 const phoneIdx = Number(btn.dataset.index);
                 const phone = featuredPhones[phoneIdx];
-                cart.push(phone);
+                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                cart.push({ name: phone.name, desc: phone.desc, img: phone.img, price: phone.price });
                 localStorage.setItem('cart', JSON.stringify(cart));
-
-                // consider a toast/snackbar instead of alert
                 alert(phone.name + ' added to cart!');
                 updateNavBar();
                 }

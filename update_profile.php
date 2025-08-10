@@ -1,13 +1,16 @@
 <?php
 // update_profile.php
 // Handles profile update including password change
-require_once 'dbConnect.php';
+require_once __DIR__ . '/config/dbConnect.php';
 session_start();
 
 $response = ["success" => false, "message" => "Unknown error."];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
+    $username = '';
+    if (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+    }
     $fullname = $_POST['fullname'] ?? '';
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';

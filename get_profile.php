@@ -1,8 +1,11 @@
 <?php
-require 'dbConnect.php';
+require __DIR__ . '/config/dbConnect.php';
 // Get username from session or GET param
+$username = '';
 session_start();
-$username = $_SESSION['username'] ?? $_GET['username'] ?? '';
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+}
 $response = [];
 if ($username) {
     $stmt = $conn->prepare('SELECT fullname, email, phone, address, gender, username FROM users WHERE username = ?');

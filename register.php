@@ -1,6 +1,6 @@
 
 <?php
-require_once 'dbConnect.php';
+require_once __DIR__ . '/config/dbConnect.php';
 
 // Registration logic
 $resultMsg = '';
