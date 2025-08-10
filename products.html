@@ -31,53 +31,7 @@
         });
     });
     // Check login status using session
-    function isLoggedIn(callback) {
-    // Use localStorage session for login status
-    callback(localStorage.getItem('isLoggedIn') === 'true');
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        isLoggedIn(function(loggedIn) {
-            document.querySelectorAll('.product').forEach(function(prod) {
-                let priceEl = prod.querySelector('p:nth-of-type(2)');
-                if (priceEl && priceEl.textContent.includes('RM')) {
-                    let price = priceEl.textContent.match(/RM\s*([\d,]+)/);
-                    if (price) {
-                        let orig = parseFloat(price[1].replace(/,/g, ''));
-                        priceEl.setAttribute('data-orig-price', orig.toLocaleString());
-                        if (loggedIn) {
-                            let disc = Math.round(orig * 0.5);
-                            priceEl.innerHTML = `<span style='text-decoration:line-through;color:#888;'>RM ${orig.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
-                        } else {
-                            priceEl.innerHTML = 'Price: RM ' + orig.toLocaleString();
-                        }
-                    }
-                }
-                // Add or remove discount badge
-                let badge = prod.querySelector('.discount-badge');
-                if (loggedIn) {
-                    if (!badge) {
-                        badge = document.createElement('div');
-                        badge.className = 'discount-badge';
-                        badge.textContent = '50% OFF';
-                        badge.style.position = 'absolute';
-                        badge.style.top = '10px';
-                        badge.style.right = '10px';
-                        badge.style.background = '#ff5252';
-                        badge.style.color = '#fff';
-                        badge.style.padding = '0.4em 1em';
-                        badge.style.borderRadius = '20px';
-                        badge.style.fontWeight = 'bold';
-                        badge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
-                        badge.style.zIndex = '2';
-                        prod.style.position = 'relative';
-                        prod.appendChild(badge);
-                    }
-                } else {
-                    if (badge) badge.remove();
-                }
-            });
-        });
-    });
+    // ...existing code...
     </script>
     <nav>
         <div class="nav-left">
@@ -114,162 +68,65 @@
             localStorage.clear();
             updateNavBar();
             alert('You’ve been signed out. Member pricing is no longer applied, and your cart has been cleared.');
-            // Force reload to ensure discount logic is reset
-            window.location.replace('products.html');
+            window.location.href = 'index.html';
         }
     });
     </script>
     </header>
     <main>
-        <div class="product-list">
-            <div class="product">
-                <img src="https://i5.walmartimages.com/seo/Restored-Apple-iPhone-15-Pro-Max-512GB-Verizon-Blue-Titanium-MU6E3LL-A-Excellent-Condition_dd2d42c6-cc25-4bee-81ef-7847120498d5.663475b807d168a41e9082d258d9c7ce.jpeg" alt="iPhone 15 Pro Max">
-                <h3>iPhone 15 Pro Max</h3>
-                <p>Apple's flagship with A17 Pro chip and titanium design.</p>
-                <p>Price: RM 5,499</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://onyarbi.com/loyalty/wp-content/uploads/2024/03/samsung-min.png" alt="Samsung Galaxy S24 Ultra">
-                <h3>Samsung Galaxy S24 Ultra</h3>
-                <p>Top-tier camera, S Pen, and Snapdragon 8 Gen 3.</p>
-                <p>Price: RM 5,699</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://techbug-my.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/04233743/p8by.jpg" alt="Google Pixel 8 Pro">
-                <h3>Google Pixel 8 Pro</h3>
-                <p>Tensor G3 chip, best-in-class AI camera.</p>
-                <p>Price: RM 4,999</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://i5.walmartimages.com/seo/OnePlus-12-DUAL-SIM-1TB-ROM-16GB-RAM-GSM-CDMA-Factory-Unlocked-5G-Smartphone-Flowy-Emerald-International-Version_280ecc7f-f534-4235-a588-623e73a3661d.7aa725547b1b96766ecdbf74c4d02cf9.jpeg" alt="OnePlus 12">
-                <h3>OnePlus 12</h3>
-                <p>Snapdragon 8 Gen 3, fast charging, premium build.</p>
-                <p>Price: RM 3,799</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://cdn.kalvo.com/uploads/img/gallery/56469-xiaomi-14-pro-3.jpg" alt="Xiaomi 14 Pro">
-                <h3>Xiaomi 14 Pro</h3>
-                <p>Leica camera, Snapdragon 8 Gen 3, sleek design.</p>
-                <p>Price: RM 4,299</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://m.media-amazon.com/images/I/710uklDlnjL._AC_SL1275_.jpg" alt="Sony Xperia 1 V">
-                <h3>Sony Xperia 1 V</h3>
-                <p>4K OLED display, pro-grade camera features.</p>
-                <p>Price: RM 6,299</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://images-cdn.ubuy.co.in/660427015abad9367d2f2d8d-oppo-find-x7-ultra-5g-smartphone-china.jpg" alt="Oppo Find X7">
-                <h3>Oppo Find X7</h3>
-                <p>Innovative design, great camera features.</p>
-                <p>Price: RM 3,499</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://www.cect-shop.com/media/catalog/products/f/60023/5b20a62701/VIVO-NEX_8.JPG.jpg" alt="Vivo Nex 6">
-                <h3>Vivo Nex 6</h3>
-                <p>Pop-up camera, immersive display.</p>
-                <p>Price: RM 2,999</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://cdn.kalvo.com/uploads/img/gallery/54815-realme-gt5-1.jpg" alt="Realme GT 5">
-                <h3>Realme GT 5</h3>
-                <p>Gaming performance, sleek design.</p>
-                <p>Price: RM 2,499</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://cdn.store-assets.com/s/629537/i/67214782.png" alt="Huawei P60 Pro">
-                <h3>Huawei P60 Pro</h3>
-                <p>Excellent camera, robust hardware.</p>
-                <p>Price: RM 4,099</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://m.media-amazon.com/images/I/710uklDlnjL._AC_SL1275_.jpg" alt="Sony Xperia 1V">
-                <h3>Sony Xperia 1V Non OLED</h3>
-                <p>4K display, professional camera features.</p>
-                <p>Price: RM 4,599</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://shop.by/images/motorola_edge_50_pro_12gb_256gb_(chernyiy)_1.webp" alt="Motorola Edge 50">
-                <h3>Motorola Edge 50</h3>
-                <p>Edge display, solid battery life.</p>
-                <p>Price: RM 2,799</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://dlcdnwebimgs.asus.com/gain/6CC77851-95F8-4910-808D-E0F94C840EB7" alt="Asus Rog Phone 8">
-                <h3>Asus Rog Phone 8</h3>
-                <p>Ultimate gaming phone, high refresh rate.</p>
-                <p>Price: RM 4,999</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://images.ctfassets.net/wcfotm6rrl7u/1vuJoVeAkX7zR7onLCkT9g/75e749405f03f62a45a8e39bf9365dd3/nokia-X30_5G-cloudy_blue-front_back-int.png" alt="Nokia XR 30">
-                <h3>Nokia XR 30</h3>
-                <p>Durable build, clean software.</p>
-                <p>Price: RM 1,999</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://cdn.tgdd.vn/Products/Images/42/249428/lenovo-legion-3-pro-600x600.jpg" alt="Lenovo Legion 3">
-                <h3>Lenovo Legion 3</h3>
-                <p>Gaming features, strong battery.</p>
-                <p>Price: RM 3,299</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://deliblumoviles.com.pe/wp-content/uploads/2024/09/AXON50N111-810x810.jpg" alt="ZTE Axon 50">
-                <h3>ZTE Axon 50</h3>
-                <p>High-res camera, affordable price.</p>
-                <p>Price: RM 2,199</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://cms.amanz.my/wp-content/uploads/2024/03/Meizu-21-Pro-B-950x1222.jpg" alt="Meizu 21 Pro">
-                <h3>Meizu 21 Pro</h3>
-                <p>Elegant design, fast charging.</p>
-                <p>Price: RM 2,499</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://cdn.kalvo.com/uploads/img/gallery/48243-tcl-40-x-3.jpg" alt="TCL 40 X">
-                <h3>TCL 40 X</h3>
-                <p>Large display, budget friendly.</p>
-                <p>Price: RM 1,499</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://gagadget.com/media/uploads/2_EaZi6et.jpg" alt="Sharp Aquos R8">
-                <h3>Sharp Aquos R8</h3>
-                <p>Crystal clear display, compact size.</p>
-                <p>Price: RM 1,899</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://www.alcatelmobile.com/my/wp-content/uploads/2020/08/Alcatel-3x-2020-comp_01_513x599_1-1.png" alt="Alcatel 5V">
-                <h3>Alcatel 5V</h3>
-                <p>Affordable, reliable performance.</p>
-                <p>Price: RM 999</p>
-                <button>Add to Cart</button>
-            </div>
-            <div class="product">
-                <img src="https://techbug-my.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/08/15180558/f869c59c-496a-4e4d-948a-a3d7ccb394d7-1.jpg" alt="Google Fold">
-                <h3>Google Fold</h3>
-                <p>Foldable display, multitasking features.</p>
-                <p>Price: RM 6,999</p>
-                <button>Add to Cart</button>
-            </div>
-        </div>
+        <div class="product-list" id="productList"></div>
+        <script>
+        function renderProducts() {
+            fetch('assets/products.json')
+                .then(response => response.json())
+                .then(products => {
+                    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                    const list = document.getElementById('productList');
+                    list.innerHTML = '';
+                    products.forEach(prod => {
+                        const div = document.createElement('div');
+                        div.className = 'product';
+                        let origPrice = prod.price;
+                        let priceHtml = '';
+                        if (loggedIn) {
+                            let disc = Math.round(origPrice * 0.5);
+                            priceHtml = `<span style='text-decoration:line-through;color:#888;'>RM ${origPrice.toLocaleString()}</span> <span style='color:#080;font-weight:bold;'>RM ${disc.toLocaleString()} (50% OFF)</span>`;
+                        } else {
+                            priceHtml = 'Price: RM ' + origPrice.toLocaleString();
+                        }
+                        div.innerHTML = `
+                            <img src="${prod.img}" alt="${prod.name}">
+                            <h3>${prod.name}</h3>
+                            <p>${prod.desc}</p>
+                            <p>${priceHtml}</p>
+                            <button>Add to Cart</button>
+                        `;
+                        if (loggedIn) {
+                            let badge = document.createElement('div');
+                            badge.className = 'discount-badge';
+                            badge.textContent = '50% OFF';
+                            badge.style.position = 'absolute';
+                            badge.style.top = '10px';
+                            badge.style.right = '10px';
+                            badge.style.background = '#ff5252';
+                            badge.style.color = '#fff';
+                            badge.style.padding = '0.4em 1em';
+                            badge.style.borderRadius = '20px';
+                            badge.style.fontWeight = 'bold';
+                            badge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+                            badge.style.zIndex = '2';
+                            div.style.position = 'relative';
+                            div.appendChild(badge);
+                        }
+                        list.appendChild(div);
+                    });
+                });
+        }
+        document.addEventListener('DOMContentLoaded', renderProducts);
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'isLoggedIn') renderProducts();
+        });
+        </script>
         <br><br><br>
     </main>
     <footer>
