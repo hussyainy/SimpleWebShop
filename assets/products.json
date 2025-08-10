@@ -124,5 +124,23 @@
     "desc": "Foldable display, multitasking features.",
     "img": "https://techbug-my.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2024/08/15180558/f869c59c-496a-4e4d-948a-a3d7ccb394d7-1.jpg",
     "price": 6999
+  },
+  {
+    "name": "Samsung S25 Ultra",
+    "desc": "Powered by Snapdragon 8 Elite processor.",
+    "img": "https://selfanistore.com/cdn/shop/files/samsung-galaxy-s25-ultra-sm-s938-1.jpg",
+    "price": 7799
+  },
+  {
+    "name": "iPhone 16 Pro Max",
+    "desc": "Powered by A18 Pro chip and titanium design.",
+    "img": "https://www.jbhifi.co.nz/cdn/shop/files/445315-Product-0-I-638615213406119528_d5ee26d5-0b16-447f-bf0c-262096c852df.jpg",
+    "price": 7999
+  },
+  {
+    "name": "Infinix GT 30 Pro 5G",
+    "desc": "Gaming phone using Mediatek Dimensity 8350 Ultimate",
+    "img": "https://www.techspecs.info/_next/image/?url=https%3A%2F%2Fwww.techspecs.info%2Fuploads%2FINFINIX_GT_30_PRO_5_G_b243634d43.png&w=3840&q=75",
+    "price": 1499
   }
 ]
