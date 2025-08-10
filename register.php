@@ -95,7 +95,7 @@ $conn->close();
             <input type="email" id="email" name="email" required>
 
             <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" pattern="60[1-9]{8,9}" maxlength="12" placeholder="e.g. 60123456789" required>
+            <input type="tel" id="phone" name="phone" pattern="0[1-9][0-9]{7,8}$" maxlength="12" placeholder="e.g. 0123456789" required>
 
             <label for="address">Address:</label>
             <input type="text" id="address" name="address" required>
